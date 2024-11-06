@@ -33,7 +33,7 @@ Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación S
 Spring Initializr habrá agregado automáticamente las dependencias de Resilience4j y Chaos Monkey en el archivo `pom.xml`. Verifica que estas dependencias están presentes:
 
 
- xml
+``` xml
  <dependencies>
      <dependency>
          <groupId>org.springframework.boot</groupId>
@@ -50,7 +50,9 @@ Spring Initializr habrá agregado automáticamente las dependencias de Resilienc
          <version>3.1.0</version>
      </dependency>
      <!-- Otras dependencias aquí -->
- </dependencies>
+ </dependencies>```
+
+```
 
 ### 3. Configurar `application.properties`
 Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en `src/main/resources/application.properties`:
