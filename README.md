@@ -57,7 +57,7 @@ Spring Initializr habrá agregado automáticamente las dependencias de Resilienc
 ### 3. Configurar `application.properties`
 Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en `src/main/resources/application.properties`:
 
-properties
+```properties
 # Configuración del servidor
 server.address=0.0.0.0
 server.port=8081
@@ -80,11 +80,12 @@ chaos.monkey.assaults.latencyRangeStart=500
 chaos.monkey.assaults.latencyRangeEnd=1500
 chaos.monkey.assaults.exceptionsActive=true
 chaos.monkey.assaults.exceptionProbability=100
+```
 
 ### 4. Editar `UserService.java`
 Crea o edita el archivo `UserService.java` en `src/main/java/com/example/microusers/service` para implementar el patrón Bulkhead.
 
-java
+```java
 // src/main/java/com/example/microusers/service/UserService.java
 package com.example.microusers.service;
 
@@ -151,10 +152,12 @@ public class UserService {
     }
 }
 
+```
+
 ### 5. Crear el archivo `docker-compose.yml`
 En la carpeta raíz del proyecto (`~/sincronizado/final-Bulkhead/`), crea el archivo `docker-compose.yml` para definir los servicios:
 
-yaml
+```yaml
 # docker-compose.yml
 version: '3.8'
 
@@ -178,6 +181,7 @@ services:
 networks:
   app-network:
     driver: bridge
+```
 
 ### 6. Ejecutar Docker Compose 
 Guarda este archivo en la carpeta ~/sincronizado/final-Bulkhead/ y ejecuta:
