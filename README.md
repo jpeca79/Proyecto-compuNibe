@@ -187,6 +187,7 @@ networks:
 Guarda este archivo en la carpeta ~/sincronizado/final-Bulkhead/ y ejecuta:
 
 ```docker-compose up -d
+
 ```
 Esto iniciará ambos contenedores en segundo plano.
 
