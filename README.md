@@ -50,7 +50,7 @@ Spring Initializr habrá agregado automáticamente las dependencias de Resilienc
     <!-- Otras dependencias aquí -->
 </dependencies>
 
-### 3. Configurar `application.properties`
+### **3. Configurar `application.properties`**
 Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en `src/main/resources/application.properties`:
 
 ```properties
