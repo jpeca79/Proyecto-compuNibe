@@ -1,73 +1,59 @@
-#Proyecto de Resiliencia con Spring Boot, Resilience4j, Chaos Monkey y Docker
+# Proyecto de Resiliencia con Spring Boot, Resilience4j, Chaos Monkey y Docker
 
-Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación Spring Boot usando Resilience4j y Chaos Monkey para simular fallos y probar la resiliencia de la aplicación. Además, se despliega la aplicación en Docker y se sube a Docker Hub utilizando Docker Compose y Minikube.
+Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación Spring Boot usando **Resilience4j** y **Chaos Monkey** para simular fallos y probar la resiliencia de la aplicación. Además, se despliega la aplicación en Docker y se sube a Docker Hub utilizando Docker Compose y Minikube.
 
-Requisitos Previos
-Java 17 o superior
-Maven (para compilar y construir el proyecto)
-Docker y Docker Compose (para el despliegue en contenedores)
-Cuenta en Docker Hub (para subir las imágenes)
-Paso a Paso
-1. Crear el Proyecto Spring Boot en Spring Initializr
-Ve a Spring Initializr.
-Configura el proyecto con los siguientes parámetros:
-Project: Maven Project
-Language: Java
-Spring Boot: 3.x.x
-Group: com.example
-Artifact: resilience-bulkhead
-Packaging: Jar
-Java: 17
-Agrega las siguientes dependencias:
-Resilience4j (para manejar la resiliencia de la aplicación)
-Chaos Monkey (para simular fallos en el sistema)
-Spring Web (para crear endpoints de prueba)
-Genera el proyecto y descárgalo. Luego, descomprime y abre el proyecto en tu editor de código preferido.
-2. Modificar pom.xml
-Spring Initializr añadirá automáticamente las dependencias de Resilience4j y Chaos Monkey en el archivo pom.xml. Asegúrate de que estas dependencias estén presentes:
+## Requisitos Previos
+- **Java** 17 o superior
+- **Maven** (para compilar y construir el proyecto)
+- **Docker** y **Docker Compose** (para el despliegue en contenedores)
+- **Cuenta en Docker Hub** (para subir las imágenes)
 
-xml
-Copiar código
+---
+
+## Paso a Paso
+
+### 1. Crear el Proyecto Spring Boot en Spring Initializr
+1. Ve a [Spring Initializr](https://start.spring.io/).
+2. Configura el proyecto con los siguientes parámetros:
+   - **Project**: Maven Project
+   - **Language**: Java
+   - **Spring Boot**: 3.x.x
+   - **Group**: `com.example`
+   - **Artifact**: `resilience-bulkhead`
+   - **Packaging**: Jar
+   - **Java**: 17
+3. Agrega las siguientes dependencias:
+   - Resilience4j (para manejar la resiliencia de la aplicación)
+   - Chaos Monkey (para simular fallos en el sistema)
+   - Spring Web (para crear endpoints de prueba)
+4. Genera el proyecto y descárgalo. Luego, descomprime y abre el proyecto en tu editor de código preferido.
+
+### 2. Modificar `pom.xml`
+Spring Initializr habrá agregado automáticamente las dependencias de Resilience4j y Chaos Monkey en el archivo `pom.xml`. Verifica que estas dependencias están presentes:
+
+```xml
 <dependencies>
-    <!-- Spring Boot y configuración -->
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter</artifactId>
     </dependency>
     <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-aop</artifactId>
-    </dependency>
-    
-    <!-- Resilience4j -->
-    <dependency>
         <groupId>io.github.resilience4j</groupId>
         <artifactId>resilience4j-spring-boot3</artifactId>
         <version>2.0.2</version>
     </dependency>
-
-    <!-- Chaos Monkey -->
     <dependency>
         <groupId>de.codecentric</groupId>
         <artifactId>chaos-monkey-spring-boot</artifactId>
         <version>3.1.0</version>
     </dependency>
-
-    <!-- Actuator -->
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-actuator</artifactId>
-    </dependency>
+    <!-- Otras dependencias aquí -->
 </dependencies>
-3. Configurar application.properties
-Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en src/main/resources/application.properties:
 
-properties
-Copiar código
+### 3. Configurar `application.properties`
+Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en `src/main/resources/application.properties`:
+
+```properties
 # Configuración del servidor
 server.address=0.0.0.0
 server.port=8081
@@ -77,11 +63,8 @@ java.net.preferIPv4Stack=true
 resilience4j.bulkhead.instances.userService.maxConcurrentCalls=3
 resilience4j.bulkhead.instances.userService.maxWaitDuration=0ms
 
-# Exposición de Actuator
+# Configuración de Actuator y Chaos Monkey
 management.endpoint.health.show-details=always
-management.health.bulkhead.enabled=true
-
-# Configuración de Chaos Monkey
 management.endpoints.web.exposure.include=*
 management.endpoint.chaosmonkey.enabled=true
 chaos.monkey.enabled=true
@@ -93,11 +76,12 @@ chaos.monkey.assaults.latencyRangeStart=500
 chaos.monkey.assaults.latencyRangeEnd=1500
 chaos.monkey.assaults.exceptionsActive=true
 chaos.monkey.assaults.exceptionProbability=100
-4. Editar UserService.java
-Implementa el patrón Bulkhead en src/main/java/com/example/microusers/service/UserService.java:
 
-java
-Copiar código
+### 4. Editar `UserService.java`
+Crea o edita el archivo `UserService.java` en `src/main/java/com/example/microusers/service` para implementar el patrón Bulkhead.
+
+```java
+// src/main/java/com/example/microusers/service/UserService.java
 package com.example.microusers.service;
 
 import com.example.microusers.model.User;
@@ -110,10 +94,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 public class UserService {
+
     private List<User> users = new ArrayList<>();
     private AtomicLong counter = new AtomicLong(1);
 
     public UserService() {
+        // Agregar usuarios predeterminados
         users.add(new User(counter.getAndIncrement(), "Juan Perez", "juan@example.com", "juan", "password123"));
         users.add(new User(counter.getAndIncrement(), "Maria Gomez", "maria@example.com", "maria", "password456"));
     }
@@ -125,9 +111,42 @@ public class UserService {
                 .findFirst()
                 .orElse(null);
     }
-    
-    // Otros métodos con Bulkhead
+
+    @Bulkhead(name = "userService", type = Bulkhead.Type.SEMAPHORE)
+    public List<User> getAllUsers() {
+        return users;
+    }
+
+    @Bulkhead(name = "userService", type = Bulkhead.Type.SEMAPHORE)
+    public User createUser(User user) {
+        user.setId(counter.getAndIncrement());
+        users.add(user);
+        return user;
+    }
+
+    @Bulkhead(name = "userService", type = Bulkhead.Type.SEMAPHORE)
+    public User updateUser(Long id, User updatedUser) {
+        User user = getUserById(id);
+        if (user != null) {
+            user.setName(updatedUser.getName());
+            user.setEmail(updatedUser.getEmail());
+            user.setUsername(updatedUser.getUsername());
+            user.setPassword(updatedUser.getPassword());
+            return user;
+        }
+        return null;
+    }
+
+    @Bulkhead(name = "userService", type = Bulkhead.Type.SEMAPHORE)
+    public boolean deleteUser(Long id) {
+        return users.removeIf(u -> u.getId().equals(id));
+    }
+
+    private User getUserById(Long id) {
+        return users.stream().filter(u -> u.getId().equals(id)).findFirst().orElse(null);
+    }
 }
+
 5. Crear el docker-compose.yml
 En la carpeta raíz del proyecto (~/sincronizado/final-Bulkhead/), crea un archivo llamado docker-compose.yml:
 
