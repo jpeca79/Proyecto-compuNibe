@@ -1,4 +1,5 @@
 Proyecto de Resiliencia con Spring Boot, Resilience4j, Chaos Monkey y Docker
+
 Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación Spring Boot usando Resilience4j y Chaos Monkey para simular fallos y probar la resiliencia de la aplicación. Además, se despliega la aplicación en Docker y se sube a Docker Hub utilizando Docker Compose y Minikube.
 
 Requisitos Previos
