@@ -13,6 +13,7 @@ Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación S
 ## Paso a Paso
 
 ### 1. Crear el Proyecto Spring Boot en Spring Initializr
+
 1. Ve a [Spring Initializr](https://start.spring.io/).
 2. Configura el proyecto con los siguientes parámetros:
    - **Project**: Maven Project
@@ -31,29 +32,30 @@ Este proyecto muestra cómo implementar el patrón Bulkhead en una aplicación S
 ### 2. Modificar `pom.xml`
 Spring Initializr habrá agregado automáticamente las dependencias de Resilience4j y Chaos Monkey en el archivo `pom.xml`. Verifica que estas dependencias están presentes:
 
-```xml
-<dependencies>
-    <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.github.resilience4j</groupId>
-        <artifactId>resilience4j-spring-boot3</artifactId>
-        <version>2.0.2</version>
-    </dependency>
-    <dependency>
-        <groupId>de.codecentric</groupId>
-        <artifactId>chaos-monkey-spring-boot</artifactId>
-        <version>3.1.0</version>
-    </dependency>
-    <!-- Otras dependencias aquí -->
-</dependencies>
+
+ xml
+ <dependencies>
+     <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter</artifactId>
+     </dependency>
+     <dependency>
+         <groupId>io.github.resilience4j</groupId>
+         <artifactId>resilience4j-spring-boot3</artifactId>
+         <version>2.0.2</version>
+     </dependency>
+     <dependency>
+         <groupId>de.codecentric</groupId>
+         <artifactId>chaos-monkey-spring-boot</artifactId>
+         <version>3.1.0</version>
+     </dependency>
+     <!-- Otras dependencias aquí -->
+ </dependencies>
 
 ### 3. Configurar `application.properties`
 Configura el límite de concurrencia de Bulkhead y habilita Chaos Monkey en `src/main/resources/application.properties`:
 
-```properties
+properties
 # Configuración del servidor
 server.address=0.0.0.0
 server.port=8081
@@ -80,7 +82,7 @@ chaos.monkey.assaults.exceptionProbability=100
 ### 4. Editar `UserService.java`
 Crea o edita el archivo `UserService.java` en `src/main/java/com/example/microusers/service` para implementar el patrón Bulkhead.
 
-```java
+java
 // src/main/java/com/example/microusers/service/UserService.java
 package com.example.microusers.service;
 
@@ -150,7 +152,7 @@ public class UserService {
 ### 5. Crear el archivo `docker-compose.yml`
 En la carpeta raíz del proyecto (`~/sincronizado/final-Bulkhead/`), crea el archivo `docker-compose.yml` para definir los servicios:
 
-```yaml
+yaml
 # docker-compose.yml
 version: '3.8'
 
@@ -175,7 +177,7 @@ networks:
   app-network:
     driver: bridge
 
-6. Ejecutar Docker Compose
+### 6. Ejecutar Docker Compose 
 Guarda este archivo en la carpeta ~/sincronizado/final-Bulkhead/ y ejecuta:
 
 bash
