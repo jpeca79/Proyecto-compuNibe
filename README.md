@@ -186,65 +186,68 @@ networks:
 ### 6. Ejecutar Docker Compose 
 Guarda este archivo en la carpeta ~/sincronizado/final-Bulkhead/ y ejecuta:
 
-bash
-Copiar código
-docker-compose up -d
+```docker-compose up -d
+```
 Esto iniciará ambos contenedores en segundo plano.
 
-Despliegue en Minikube
+### Despliegue en Minikube
 Requisitos Previos
 Docker: Para que Minikube use Docker como controlador.
 Kubectl: Herramienta de línea de comandos de Kubernetes.
+
 Paso 1: Instalar Minikube
 Descarga e instala Minikube:
 
-bash
-Copiar código
-curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+```curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
-Verifica la instalación:
 
-bash
-Copiar código
+```
+Verifica la instalación:
+```
 minikube version
+```
+
 Paso 2: Iniciar Minikube
 Inicia el clúster de Minikube con el controlador Docker:
 
-bash
-Copiar código
+```
 minikube start --driver=docker
+```
 Configura el entorno de Docker de Minikube:
 
-bash
-Copiar código
+```
 eval $(minikube -p minikube docker-env)
+
+```
 Paso 3: Desplegar en Kubernetes
 Apunta tu terminal a Docker en Minikube:
 
-bash
-Copiar código
+```
 eval $(minikube -p minikube docker-env)
+```
 Aplica los archivos YAML de despliegue:
 
-bash
-Copiar código
+```
 kubectl apply -f frontend-deployment.yaml
 kubectl apply -f microusers-deployment.yaml
+```
 Verifica que los pods y servicios estén corriendo:
 
-bash
-Copiar código
+```
 kubectl get pods
 kubectl get services
+```
+
 Obtén la URL de los servicios para probarlos:
 
-bash
-Copiar código
+```
 minikube service frontend --url
 minikube service microusers --url
+```
+
 Accede a los servicios desde tu navegador o mediante curl:
 
-bash
-Copiar código
+```
 curl <URL-del-frontend>
 curl <URL-del-microusers>
+```
